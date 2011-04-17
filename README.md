@@ -16,4 +16,6 @@ NOTE: The PHP source in this repo is bogus and not used, only the debian/ folder
 makes sense. Launchpad will automatically pull in the latest PHP code from
 trunk/ (actually from the launchpad bazaar repo, which is a mirror of trunk),
 and then merge the debian/ folder into that before building the packages.
+Launchpad does not understand git branches, which is why this repo is a fork of
+the php5-vanilla-ubuntu github repo :]
 
