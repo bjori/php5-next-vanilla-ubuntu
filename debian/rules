@@ -288,11 +288,6 @@ configure-apache2-stamp: prepared-stamp
 		--with-pdo-odbc=shared,unixODBC,/usr \
 		--with-pdo-pgsql=shared,/usr/bin/pg_config \
 		--with-pdo-dblib=shared,/usr
-	cd apache2-build && \
-	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
-	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
-	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
-	   Zend/
 	touch configure-apache2-stamp
 
 configure-apache2filter-stamp: prepared-stamp
@@ -310,11 +305,6 @@ configure-apache2filter-stamp: prepared-stamp
 		--disable-pdo \
 		--without-mysql --without-sybase-ct --without-mssql \
 		--without-sqlite3
-	cd apache2filter-build && \
-	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
-	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
-	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
-	   Zend/
 	touch configure-apache2filter-stamp
 
 configure-cgi-stamp: prepared-stamp
@@ -332,11 +322,6 @@ configure-cgi-stamp: prepared-stamp
 		--disable-pdo \
 		--without-mysql --without-sybase-ct --without-mssql \
 		--without-sqlite3
-	cd cgi-build && \
-	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
-	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
-	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
-	   Zend/
 	touch configure-cgi-stamp
 
 configure-cli-stamp: prepared-stamp
@@ -354,11 +339,6 @@ configure-cli-stamp: prepared-stamp
 		--disable-pdo \
 		--without-mysql --without-sybase-ct \
 		--without-mssql --without-sqlite3 --enable-pcntl
-	cd cli-build && \
-	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
-	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
-	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
-	   Zend/
 	touch configure-cli-stamp
 
 configure-fpm-stamp: prepared-stamp
@@ -378,11 +358,6 @@ configure-fpm-stamp: prepared-stamp
 		--disable-pdo \
 		--without-mysql --without-sybase-ct \
 		--without-mssql --without-sqlite3
-	cd fpm-build && \
-	cp ../Zend/zend_ini_scanner.c ../Zend/zend_language_scanner.c \
-	   ../Zend/zend_ini_parser.h ../Zend/zend_language_parser.h \
-	   ../Zend/zend_ini_parser.c ../Zend/zend_language_parser.c \
-	   Zend/
 	touch configure-fpm-stamp
 
 clean: unprepared unpatch
