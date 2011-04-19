@@ -286,6 +286,7 @@ configure-apache2-stamp: prepared-stamp
 		--with-pdo-mysql=shared,mysqlnd \
 		--with-pdo-odbc=shared,unixODBC,/usr \
 		--with-pdo-pgsql=shared,/usr/bin/pg_config \
+		--with-pdo-sqlite=shared,/usr \
 		--with-pdo-dblib=shared,/usr
 	touch configure-apache2-stamp
 
