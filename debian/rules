@@ -96,7 +96,7 @@ COMMON_CONFIG=--build=$(DEB_BUILD_GNU_TYPE) \
 		--disable-static \
 		--with-pic \
 		--with-layout=GNU \
-		--with-pear=/usr/share/php \
+		--without-pear \
 		--enable-calendar \
 		--enable-sysvsem \
 		--enable-sysvshm \
@@ -178,7 +178,7 @@ else
 	echo 'nocheck found in DEB_BUILD_OPTIONS' | tee test-results.txt
 endif
 
-build: build-apache2-stamp build-apache2filter-stamp build-cgi-stamp build-cli-stamp build-fpm-stamp build-pear-stamp test-results.txt
+build: build-apache2-stamp build-apache2filter-stamp build-cgi-stamp build-cli-stamp build-fpm-stamp test-results.txt
 
 build-apache2-stamp: configure-apache2-stamp
 	dh_testdir
@@ -220,22 +220,6 @@ build-cgi-stamp: configure-cgi-stamp
 	cd cgi-build && $(MAKE) && mv sapi/cgi/php-cgi sapi/cgi/usr.bin.php5-cgi
 
 	touch build-cgi-stamp
-
-build-pear-stamp: build-cgi-stamp
-	dh_testdir
-	-mkdir pear-build
-	-mkdir pear-build-download
-	cd cgi-build && PHP_PEAR_DOWNLOAD_DIR=$(CURDIR)/pear-build-download $(MAKE) install-pear PHP_PEAR_PHP_BIN=/usr/bin/php PHP_PEAR_INSTALL_DIR=/usr/share/php PHP_PEAR_SYSCONF_DIR=/etc/pear PHP_PEAR_SIG_BIN=/usr/bin/gpg INSTALL_ROOT=$(CURDIR)/pear-build
-	sed -i -e 's/-d output_buffering=1 -d open_basedir="" -d safe_mode=0/-d output_buffering=1 -d open_basedir="" -d safe_mode=0 -d memory_limit="-1"/' \
-	       $(CURDIR)/pear-build/usr/bin/pear && \
-	sed -i -e 's/-d output_buffering=1 -d safe_mode=0/-d output_buffering=1 -d open_basedir="" -d safe_mode=0 -d memory_limit="-1"/' \
-	       $(CURDIR)/pear-build/usr/bin/pecl && \
-	sed -i -e 's/-d memory_limit="-1"//' \
-	       -e 's/-d output_buffering=1 -d open_basedir="" -d safe_mode=0/-d output_buffering=1 -d open_basedir="" -d safe_mode=0 -d memory_limit="-1"/' \
-	       $(CURDIR)/pear-build/usr/bin/peardev
-	sed -i -re "s#('PEAR_CONFIG_SYSCONFDIR', PHP_SYSCONFDIR)#\1 . '/pear'#" $(CURDIR)/pear-build/usr/share/php/PEAR/Config.php
-	patch -s -d $(CURDIR)/pear-build/usr/share/php/ -p1 -i $(CURDIR)/debian/patches/CVE-2011-1144.patch
-	touch build-pear-stamp
 
 configure: configure-apache2-stamp configure-apache2filter-stamp configure-cli-stamp configure-fpm-stamp configure-cgi-stamp
 
@@ -369,14 +353,12 @@ clean: unprepared unpatch
 	rm -f configure-cgi-stamp build-cgi-stamp
 	rm -f configure-cli-stamp build-cli-stamp
 	rm -f configure-fpm-stamp build-fpm-stamp
-	rm -f build-pear-stamp
 	rm -f install-stamp
 	rm -rf apache2-build
 	rm -rf apache2filter-build
 	rm -rf cgi-build
 	rm -rf cli-build
 	rm -rf fpm-build
-	rm -rf pear-build pear-build-download
 	rm -f debian/copyright
 	rm -rf test-results.txt
 	dh_clean -Xorig
@@ -434,33 +416,6 @@ install: build
 			Zend/zend_config.nw.h Zend/zend_config.w32.h\
 			main/config.nw.h main/config.w32.h\
 			main/win95nt.h
-
-	# install PEAR
-	cp -a pear-build/* debian/php-pear/
-
-	# everything under usr/share/php/data except 'PEAR' is b0rken
-	# and actually needs to be fixed
-	[ ! -f debian/php-pear/usr/share/php/data/Structures_Graph/LICENSE ] || \
-		$(RM) debian/php-pear/usr/share/php/data/Structures_Graph/LICENSE
-	[ ! -f debian/php-pear/usr/share/php/doc/PEAR/INSTALL ] || \
-		$(RM) debian/php-pear/usr/share/php/doc/PEAR/INSTALL
-	[ ! -f debian/php-pear/usr/share/php/doc/Structures_Graph/docs/generate.sh ] || \
-		$(RM) debian/php-pear/usr/share/php/doc/Structures_Graph/docs/generate.sh
-	for f in Structures_Graph/publish.sh Structures_Graph/package.sh \
-		Structures_Graph/genpackage.xml.pl; do \
-		$(RM) debian/php-pear/usr/share/php/data/$$f; \
-	done
-	# we don't want test suites
-	$(RM) -r debian/php-pear/usr/share/php/test/
-	[ -d debian/php-pear/usr/share/php/doc ] && { \
-		mkdir -p debian/php-pear/usr/share/doc/php5-common/PEAR; \
-		mv debian/php-pear/usr/share/php/doc/* \
-			debian/php-pear/usr/share/doc/php5-common/PEAR/; \
-		$(RM) -r debian/php-pear/usr/share/php/doc; \
-		ln -s ../doc/php-pear/PEAR debian/php-pear/usr/share/php/doc; \
-		echo "Dummy placeholder to prevent the directory's deletion" > \
-			debian/php-pear/usr/share/doc/php5-common/PEAR/.placeholder; \
-	}
 
 	# install extensions
 	ext=`./debian/libapache2-mod-php5/usr/bin/php-config --extension-dir`;\
@@ -542,7 +497,6 @@ install: build
 
 	# directories cleanup:
 	-rmdir -p debian/libapache2-mod-php5/usr/share/man/man1
-	-find debian/php-pear -type d -exec rmdir --ignore-fail-on-non-empty -p '{}' \; >/dev/null 2>&1
 
 	touch install-stamp
 
@@ -557,7 +511,7 @@ binary-indep: build install
 
 	dh_installdocs
 
-	for package in php5 php-pear; do \
+	for package in php5; do \
 		rm -rf debian/$$package/usr/share/doc/$$package; \
 		ln -s php5-common debian/$$package/usr/share/doc/$$package; \
 	done

@@ -227,27 +227,6 @@ Description: Debug symbols for PHP5
  dynamically generated pages quickly. This version of PHP5 was built
  with the Suhosin patch.
 
-Package: php-pear
-Architecture: all
-Depends: ${misc:Depends}, php5-common (>= ${source:Version}), php5-cli
-Recommends: gnupg
-Conflicts: php-xml-util
-Suggests: php5-dev
-Replaces: php4-pear (<< 4:4.4.0-0), php-xml-util
-Provides: php-xml-util
-Description: PEAR - PHP Extension and Application Repository
- This package contains the base PEAR classes for PHP, as well as the PEAR
- installer.  Many PEAR classes are already packaged for Debian, and can be
- easily identified by names beginning with "php-", such as php-db and
- php-auth.  Note: to build and install precompiled PECL extensions, you
- will need one of the php development packages installed.
- .
- PHP5 is a widely-used general-purpose scripting language that is
- especially suited for Web development and can be embedded into HTML.
- The goal of the language is to allow web developers to write
- dynamically generated pages quickly. This version of PHP5 was built
- with the Suhosin patch.
-
 Package: php5-curl
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ${php:Depends}, php5-common (= ${binary:Version})
