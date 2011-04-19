@@ -120,7 +120,6 @@ COMMON_CONFIG=--build=$(DEB_BUILD_GNU_TYPE) \
 		--with-libxml-dir=/usr \
 		--with-zlib \
 		--with-kerberos=/usr \
-		--with-openssl=/usr \
 		--enable-soap \
 		--enable-zip \
 		--with-mhash=yes \
