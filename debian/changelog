@@ -1,5 +1,11 @@
 php5 (5.4.0-0ubuntu0ppa1) maverick; urgency=low
 
+  * Remove all sorts of weird patches
+
+ -- Hannes Magnusson <bjori@php.net>  Sun, 05 May 2011 19:45:09 +0200
+
+php5 (5.4.0-0ubuntu0ppa1) maverick; urgency=low
+
   * Fix build against PHP trunk/
 
  -- Hannes Magnusson <bjori@php.net>  Sun, 17 Apr 2011 12:17:09 +0200
