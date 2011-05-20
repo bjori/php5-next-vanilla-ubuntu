@@ -4,7 +4,6 @@
 053-extension_api.patch
 057-no_apache_installed.patch
 100-recode_is_shared.patch
-115-autoconf_ftbfs.patch
 dont-gitclean-in-build.patch
 session_save_path.patch
 fpm-config.patch
